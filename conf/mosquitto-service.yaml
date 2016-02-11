@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqtt-master
+  labels:
+    name: mqtt-master
+spec:
+  ports:
+  - port: 1883
+    targetPort: 1883
+  selector:
+    name: mqtt-master
