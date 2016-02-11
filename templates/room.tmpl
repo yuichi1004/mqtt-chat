@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>ChatRoom - {{ .title }}</title>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script>
+        var name = "{{ .title }}";
+        var es = new EventSource("/api/rooms/" + name);
+
+        es.onmessage = function(e) {
+            msg = JSON.parse(e.data);
+            element = $("<div>").html(msg.sender + " - " + msg.message);
+            $("#log").append(element);
+        }
+
+        function submit_message() {
+            sender = $("#name").val();
+            msg = $("#message").val();
+            $.ajax({
+                url: "/api/rooms/" + name,
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    sender: sender,
+                    message: msg
+                })
+            });
+        }
+
+    </script>
+</head>
+<body>
+<h1>ChatRoom: {{ .title }}</h1>
+<form action="javascript:submit_message()">
+    <dl>
+        <dt>Name</dt>
+        <dd><input type="text" id="name" value="No name"></input></dd>
+        <dt>Comment</dt>
+        <dd><input type="text" id="message" /></dd>
+    </dl>
+    <input type="submit" value="send"></input>
+</form>
+<div id="log">
+</div>
+</body>
+</html>
